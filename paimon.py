@@ -1,6 +1,7 @@
 # paimon.py
 import os
 
+import database
 import discord
 from dotenv import load_dotenv
 
