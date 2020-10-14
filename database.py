@@ -82,6 +82,8 @@ commons = {
     "nectar"
 }
 
+books = {"ballad", "diligence", "freedom", "gold", "prosperity", "resistance"}
+
 # characters to their talent ascension materials
 characters_talent = {
     "amber": {"freedom"},
