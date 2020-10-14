@@ -37,6 +37,31 @@ element_materials = {
 }
 
 # characters to their level ascension materials
+characters_level_farmable = {
+    "amber": {"small lamp grass", "arrowhead"},
+    "barbara" : {"philanemo mushroom", "scroll"},
+    "beidou" : {"noctilucous jade", "hoarder"},
+    "bennett" : {"windwheel aster", "hoarder"},
+    "chongyun" : {"cor lapis", "mask"},
+    "diluc" : {"small lamp grass", "fatui"},
+    "fischl" : {"small lamp grass", "arrowhead"},
+    "jean" : {"dandelion seed", "mask"},
+    "kaeya" : {"calla lily", "hoarder"},
+    "keqing" : {"cor lapis", "nectar"},
+    "lisa" : {"valberry", "slime"},
+    "mona" : {"philanemo msuhroom", "nectar"},
+    "ningguang" : {"glaze lily", "fatui"},
+    "noelle" : {"valberry", "mask"},
+    "qiqi" : {"violetgrass", "scroll"},
+    "razor" : {"wolfhook", "mask"},
+    "sucrose" : {"windwheel aster", "nectar"},
+    "traveler" : {"windwheel aster", "mask"},
+    "venti" : {"cecilia", "slime"},
+    "xiangling" : {"jueyun chili", "slime"},
+    "xingqiu" : {"silk flower", "mask"}
+}
+
+# characters to their level ascension materials
 characters_level = {
     "amber": {"small lamp grass", "arrowhead"},
     "barbara" : {"philanemo mushroom", "scroll"},

@@ -40,7 +40,7 @@ async def on_message(message):
                 await valid_commands[tokens[0]](message, *tokens[1:])
 
 async def help(message, *args):
-    await message.channel.send(f"valid commands are: {', '.join(valid_commands.keys())}")
+    await message.channel.send(f"valid commands: {', '.join(valid_commands.keys())}")
 
 async def test(message, *args):
     await message.channel.send("Test post please ignore")
@@ -94,27 +94,63 @@ async def remove(message, *args):
     else:
         await post(message, f"Please provide space delimited arguments!")
 
-# TODO: Split into books/weapon materials
 async def today(message, *args):
     now = datetime.datetime.now()
     day_name = now.strftime("%A")
-    username = str(message.author)
-    possibilities = []
-    for character in userdata[username]:
-        talent = list(characters_talent[character].intersection(books))[0]
-        if day_name in materials[talent][0]:
-            possibilities.append(f"{talent.capitalize()} books for {character.capitalize()} at {materials[talent][1]}")
-    if possibilities:
-        text = "\n".join(possibilities)
-        await post(message, f"Today, you can run:\n```{text}```")
-    else:
-        await post(message, f"Unfortunately, there are no books you can run today!")
+    await day(message, day_name)
 
+async def tomorrow(message, *args):
+    now = datetime.datetime.now() + datetime.timedelta(days=1)
+    day_name = now.strftime("%A")
+    await day(message, day_name)
+
+async def day(message, *args):
+    if args:
+        valid = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        day_name = str.lower(args[0]).capitalize()
+        print(day_name)
+        if day_name in valid:
+            username = str(message.author)
+            possibilities = []
+            for character in userdata[username]:
+                talent = list(characters_talent[character].intersection(books))[0]
+                if day_name in materials[talent][0]:
+                    possibilities.append(f"{talent.capitalize()} books for {character.capitalize()} at {materials[talent][1]}")
+            if possibilities:
+                text = "\n".join(possibilities)
+                await post(message, f"On {day_name}, you can run:\n```{text}```")
+            else:
+                await post(message, f"Unfortunately, there are no books you can run today!")
+        else:
+            await post(message, f"{day_name} is not a valid day name! Try a weekday or weekend.")
+    else:
+        await post(message, f"No valid day was provided to this command.")
+
+async def box(message, *args):
+    characters = userdata[str(message.author)]
+    await post(message, f"You are currently tracking: {natural_format(characters)}")
+
+# TODO: impl
 async def lookup(message, *args):
     if args:
-        for arg in args:
+        item = str.lower(args[0])
+        if item in characters_level:
+            await character_lookup(message, item)
     else:
-        await post(message, "You need to enter in space delimited arguments of materials to look up.")
+        await post(message, "You need to enter in one item to look up.")
+
+async def character_lookup(message, character):
+    element = characters_element[character]
+    farmable_mats = natural_format(list(characters_level_farmable[character]))
+    element_mats = natural_format(list(element_materials[element]))
+    talent_mats = natural_format(list(characters_talent[character]))
+    character = character.capitalize()
+    text = (
+        f"{character} uses {element_mats} boss drops to level up. \n"
+        f"They also use {farmable_mats} farmables to level up. \n"
+        f"Their talents use {talent_mats} to level up. \n"
+    )
+    await post(message, text)
 
 # just so you're not writing awaits everywhere
 async def post(message, text):
@@ -141,11 +177,15 @@ def load():
 # get command list ready
 valid_commands = {
     "add" : add,
+    "box" : box,
+    "day" : day,
     "help" : help,
+    "lookup" : lookup,
     "register" : register,
     "remove" : remove,
     "test" : test,
-    "today" : today
+    "today" : today,
+    "tomorrow" : tomorrow
 }
 
 # populate "userdata", indexed on author id
