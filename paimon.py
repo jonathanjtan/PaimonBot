@@ -95,12 +95,12 @@ async def remove(message, *args):
         await post(message, f"Please provide space delimited arguments!")
 
 async def today(message, *args):
-    now = datetime.datetime.now()
+    now = datetime.datetime.now() - datetime.timedelta(hours=5)
     day_name = now.strftime("%A")
     await day(message, day_name)
 
 async def tomorrow(message, *args):
-    now = datetime.datetime.now() + datetime.timedelta(days=1)
+    now = datetime.datetime.now() - datetime.timedelta(hours=5)
     day_name = now.strftime("%A")
     await day(message, day_name)
 
