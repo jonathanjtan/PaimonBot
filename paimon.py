@@ -161,16 +161,11 @@ async def post(message, text):
     await message.channel.send(text)
 
 def natural_format(words):
-    formatted_words = []
-    # handle hyphens and capitalizations
+    formatted = []
     for w in words:
-        split = w.split("-")
-        if len(split) == 1:
-            formatted_word = w.capitalize()
-        else:
-            formatted_word = " ".join([x.capitalize() for x in w.split("-")])
-        formatted_words.append(formatted_word)
-    words = formatted_words
+        string = " ".join([x.capitalize() for x in w.split(" ")])
+        formatted.append(string)
+    words = formatted
     if len(words) == 1:
         return words[0]
     elif len(words) == 2:
@@ -218,7 +213,6 @@ def save():
 def load():
     with open(USERDATA_LOCATION, 'rb') as f:
         return pickle.load(f)
-    migrate()
 
 # get command list ready
 valid_commands = {
@@ -238,6 +232,8 @@ valid_commands = {
 if os.path.exists(USERDATA_LOCATION):
     userdata = load()
     print(f"loading: {userdata}")
+    migrate()
+
 else:
     userdata = dict()
     save()
