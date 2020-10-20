@@ -218,7 +218,6 @@ def save():
 def load():
     with open(USERDATA_LOCATION, 'rb') as f:
         return pickle.load(f)
-    migrate()
 
 # get command list ready
 valid_commands = {
