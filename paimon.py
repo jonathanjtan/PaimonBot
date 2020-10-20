@@ -14,6 +14,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_SERVER')
 USERDATA_LOCATION = "users.pkl"
 userdata = None
+uwu_owo = False
 
 client = discord.Client()
 
@@ -33,7 +34,7 @@ async def on_message(message):
     if content.startswith("="):
         tokens = content[1:].split()
         if not tokens or tokens[0] not in valid_commands:
-            await message.channel.send(f"That's not a valid command, {message.author}!")
+            await post(message, f"That's not a valid command, {message.author}!")
         else:
             if len(tokens) == 1:
                 await valid_commands[tokens[0]](message)
@@ -45,19 +46,23 @@ async def on_message(message):
                     await valid_commands[tokens[0]](message, *tokens[1:])
 
 async def help(message, *args):
-    await message.channel.send(f"valid commands: {', '.join(valid_commands.keys())}")
+    await post(message, f"valid commands: {', '.join(valid_commands.keys())}")
 
 async def test(message, *args):
-    await message.channel.send("Test post please ignore")
+    await post(message, "Test post please ignore")
+
+async def uwu(message, *args):
+    uwu_owo = not uwu_owo
+    await post(message, "owo")
 
 async def register(message, *args):
     username = str(message.author)
     if username not in userdata:
         userdata[username] = set()
         save()
-        await message.channel.send(f"{username}, you have been registered to the database!")
+        await post(message, f"{username}, you have been registered to the database!")
     else:
-        await message.channel.send(f"{username}, you have already been registered to the database!")
+        await post(message, f"{username}, you have already been registered to the database!")
 
 async def add(message, *args):
     username = str(message.author)
@@ -66,18 +71,18 @@ async def add(message, *args):
         for arg in args:
             arg = str.lower(arg).strip()
             if arg not in characters_element and arg not in weapons_materials:
-                await message.channel.send(f"{arg.capitalize()} is neither a character nor weapon in Genshin Impact, please try again!")
+                await post(message, f"{arg.capitalize()} is neither a character nor weapon in Genshin Impact, please try again!")
             else:
                 if arg not in userdata[username]:
                     userdata[username].add(arg)
                     added.append(arg.capitalize())
                 else:
-                    await message.channel.send(f"You've already added {natural_format([arg])} to your list of characters and weapons!")
+                    await post(message, f"You've already added {natural_format([arg])} to your list of characters and weapons!")
         if added:
             save()
-            await message.channel.send(f"You've added {natural_format(added)} to your list of characters and weapons!")
+            await post(message, f"You've added {natural_format(added)} to your list of characters and weapons!")
     else:
-        await message.channel.send(f"Please provide comma delimited arguments! Leave out punctuation from weapons.")
+        await post(message, f"Please provide comma delimited arguments! Leave out punctuation from weapons.")
 
 async def remove(message, *args):
     username = str(message.author)
@@ -97,7 +102,7 @@ async def remove(message, *args):
             save()
             await post(message, f"You've removed {natural_format(removed)} from your list of characters and weapons!")
     else:
-        await message.channel.send(f"Please provide comma delimited arguments! Leave out punctuation from weapons.")
+        await post(message, f"Please provide comma delimited arguments! Leave out punctuation from weapons.")
 
 async def today(message, *args):
     print(datetime.datetime.now())
@@ -158,7 +163,10 @@ async def character_lookup(message, character):
 
 # just so you're not writing awaits everywhere
 async def post(message, text):
-    await message.channel.send(text)
+    if uwu_owo:
+        await message.channel.send(text.replace("u", "uwu").replace("o", "owo"))
+    else:
+        await message.channel.send(text)
 
 def natural_format(words):
     formatted = []
@@ -221,6 +229,7 @@ valid_commands = {
     "day" : day,
     "help" : help,
     "lookup" : lookup,
+    "uwu" : uwu,
     "register" : register,
     "remove" : remove,
     "test" : test,
