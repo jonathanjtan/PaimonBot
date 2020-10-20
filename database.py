@@ -137,8 +137,121 @@ characters_talent = {
 for character, talent in characters_talent.items():
     talent.update(characters_level[character].intersection(commons))
 
-# TODO: weapons : weapon materials
-weapons_materials = {}
+# weapon strings
+decarabian = "decarabian"
+wolf = "wolf"
+gladiator = "gladiator"
+guyun = "guyun"
+elixir = "elixir"
+aerosiderite = "aerosiderite"
+
+weapon_ascension = {decarabian, wolf, gladiator, guyun, elixir, aerosiderite}
+
+# TODO: add commons to weapon_materials
+
+sword = {
+    "cool-steel" : {decarabian},
+    "dark-iron-sword" : {guyun},
+    "favonius-sword" : {decarabian},
+    "fillet-blade" : {elixir},
+    "harbinger-of-doom" : {wolf},
+    "iron-sting" : {aerosiderite},
+    "lions-roar" : {guyun},
+    "prototype-rancour" : {elixir},
+    "sacrificial-sword" : {gladiator},
+    "skyrider-sword" : {aerosiderite},
+    "skyward-blade" : {wolf},
+    "sword-of-descension"  : {wolf},
+    "the-black-sword" : {wolf},
+    "the-flute" : {wolf},
+    "travelers-handy-sword" : {gladiator}
+}
+
+catalyst = {
+    "emerald-orb" : {guyun},
+    "eye-of-perception" : {elixir},
+    "favonius-codex" : {decarabian},
+    "lost-prayer-to-the-sacred-winds" : {gladiator},
+    "magic-guide" : {decarabian},
+    "mappa-mare" : {aerosiderite},
+    "otherworldly-story" : {gladiator},
+    "prototype-malice" : {elixir},
+    "royal-grimore" : {aerosiderite},
+    "sacrificial-fragments" : {gladiator},
+    "solar-pearl" : {guyun},
+    "the-widsith" : {wolf},
+    "thrilling-tales-of-dragon-slayers" : {wolf},
+    "twin-nephrite" : {elixir},
+    "wine-and-song" : {wolf}
+}
+
+claymore = {
+    "bloodtainted-greatsword" : {wolf},
+    "debate-club" : {elixir},
+    "favonius-greatsword" : {gladiator},
+    "ferrous-shadow" : {decarabian},
+    "prototype-animus" : {aerosiderite},
+    "rainslasher" : {elixir},
+    "royal-greatsword" : {gladiator},
+    "sacrificial-greatsword" : {wolf},
+    "serpent-spine" : {aerosiderite},
+    "skyrider-greatsword" : {aerosiderite},
+    "the-bell" : {decarabian},
+    "white-iron-greatsword" : {gladiator},
+    "whiteblind" : {guyun},
+    "wolfs-gravestone" : {gladiator},
+}
+
+bow = {
+    "alley-hunter" : {wolf},
+    "amos-bow" : {gladiator},
+    "blackcliff-warbow" : {guyun},
+    "compound-bow" : {aerosiderite},
+    "favonius-warbow" : {gladiator},
+    "messenger" : {elixir},
+    "prototype-crescent" : {elixir},
+    "raven-bow" : {decarabian},
+    "recurve-bow" : {gladiator},
+    "rust" : {guyun},
+    "sacrificial-bow" : {wolf},
+    "sharpshooters-oath" : {wolf},
+    "skyward-harp" : {wolf},
+    "slingshot" : {guyun},
+    "stringless" : {decarabian},
+    "the-viridescent-hunt" : {decarabian},
+}
+
+polearm = {
+    "black tassel" : {aerosiderite},
+    "crescent-pike" : {guyun},
+    "dragons-bane" : {elixir},
+    "favonius-lance" : {gladiator},
+    "halberd" : {elixir},
+    "primordial-jade-winged-spear" : {guyun},
+    "prototype-grudge" : {aerosiderite},
+    "skyward-spine" : {gladiator},
+    "white tassel" : {guyun}
+}
+
+sword = {
+    "cool-steel" : {decarabian},
+    "dark-iron-sword" : {guyun},
+    "favonius-sword" : {decarabian},
+    "fillet-blade" : {elixir},
+    "harbinger-of-doom" : {wolf},
+    "iron-sting" : {aerosiderite},
+    "lions-roar" : {guyun},
+    "prototype-rancour" : {elixir},
+    "sacrificial-sword" : {gladiator},
+    "skyrider-sword" : {aerosiderite},
+    "skyward-blade" : {wolf},
+    "sword-of-descension"  : {wolf},
+    "the-black-sword" : {wolf},
+    "the-flute" : {wolf},
+    "travelers-handy-sword" : {gladiator}
+}
+
+weapons_materials = {**catalyst, **claymore, **bow, **polearm, **sword}
 
 # materials : (condition, how)
 materials = {
@@ -155,13 +268,23 @@ materials = {
     "hoarfrost core" : (["Anytime"], "Cryo Regisvine"),
     "varunada lazurite" : (["Anytime"], "Oceanid"), 
     "cleansing heart" : (["Anytime"], "Oceanid"),
+
     # TODO: commons
     # TODO: specialties
+
     # books
     "ballad" : (["Wednesday", "Saturday", "Sunday"], "Forsaken Rift"),
     "diligence" : (["Tuesday", "Friday", "Sunday"], "Taishan Mansion"),
     "freedom" : (["Monday", "Thursday", "Sunday"], "Taishan Mansion"),
     "gold" : (["Wednesday", "Saturday", "Sunday"], "Taishan Mansion"),
     "prosperity" : (["Monday", "Thursday", "Sunday"], "Taishan Mansion"),
-    "resistance" : (["Tuesday", "Friday", "Sunday"], "Forsaken Rift")
+    "resistance" : (["Tuesday", "Friday", "Sunday"], "Forsaken Rift"),
+
+    # weapon ascension
+    decarabian : (["Monday", "Thursday", "Sunday"], "Cecilia Garden"),
+    wolf : (["Tuesday", "Friday", "Sunday"], "Cecilia Garden"),
+    gladiator : (["Wednesday", "Saturday", "Sunday"], "Cecilia Garden"),
+    guyun : (["Monday", "Thursday", "Sunday"], "Lianshan Formula"),
+    elixir : (["Tuesday", "Friday", "Sunday"], "Lianshan Formula"),
+    aerosiderite : (["Wednesday", "Saturday", "Sunday"], "Lianshan Formula"),
 }

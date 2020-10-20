@@ -1,11 +1,12 @@
 # paimon.py
-import os
-
-from database import *
 import datetime
+import os
+import pickle
+
 import discord
 from dotenv import load_dotenv
-import pickle
+
+from database import *
 
 # Load secret from .env
 load_dotenv()
@@ -67,12 +68,12 @@ async def add(message, *args):
                     userdata[username].add(arg)
                     added.append(arg.capitalize())
                 else:
-                    await message.channel.send(f"You've already added {arg.capitalize()} to your list of characters and weapons!")
+                    await message.channel.send(f"You've already added {natural_format(arg)} to your list of characters and weapons!")
         if added:
             save()
             await message.channel.send(f"You've added {natural_format(added)} to your list of characters and weapons!")
     else:
-        await message.channel.send(f"Please provide space delimited arguments!")
+        await message.channel.send(f"Please provide space delimited arguments! Leave out punctuation from weapons and replace spaces with hyphens for multi-word weapons.")
 
 async def remove(message, *args):
     username = str(message.author)
@@ -112,24 +113,22 @@ async def day(message, *args):
         print(day_name)
         if day_name in valid:
             username = str(message.author)
-            possibilities = []
-            for character in userdata[username]:
-                talent = list(characters_talent[character].intersection(books))[0]
-                if day_name in materials[talent][0]:
-                    possibilities.append(f"{talent.capitalize()} books for {character.capitalize()} at {materials[talent][1]}")
+            possibilities = possibilities_format(userdata[username], day_name)
             if possibilities:
                 text = "\n".join(possibilities)
-                await post(message, f"Starting {day_name} at 2:00AM, you can run in the next 24 hours:\n```{text}```")
+                await post(message, f"On {day_name}, you can run:\n```{text}```")
             else:
-                await post(message, f"Unfortunately, there are no books you can run today!")
+                await post(message, f"Unfortunately, there's nothing you can run!")
         else:
             await post(message, f"{day_name} is not a valid day name! Try a weekday or weekend.")
     else:
         await post(message, f"No valid day was provided to this command.")
 
 async def box(message, *args):
-    characters = userdata[str(message.author)]
-    await post(message, f"You are currently tracking: {natural_format(characters)}")
+    units = userdata[str(message.author)]
+    characters = [c for c in units if c in characters_element]
+    weapons = [w for w in units if w in weapons_materials]
+    await post(message, f"Your tracked characters are: {natural_format(characters)}. Your tracked weapons are: {natural_format(weapons)}")
 
 # TODO: impl
 async def lookup(message, *args):
@@ -158,13 +157,46 @@ async def post(message, text):
     await message.channel.send(text)
 
 def natural_format(words):
-    words = [w.capitalize() for w in words]
+    formatted_words = []
+    # handle hyphens and capitalizations
+    for w in words:
+        split = w.split("-")
+        if len(split) == 1:
+            formatted_word = w.capitalize()
+        else:
+            formatted_word = " ".join([x.capitalize() for x in w.split("-")])
+        formatted_words.append(formatted_word)
+    words = formatted_words
     if len(words) == 1:
         return words[0]
     elif len(words) == 2:
         return " and ".join(words)
     else:
         return ", ".join(words[:len(words) - 1]) + ", and " + words[len(words) - 1]
+
+def possibilities_format(units, day_name):
+    locations = {}
+    for unit in units:
+        if unit in characters_element: # tracking a character
+            material = list(characters_talent[unit].intersection(books))[0]
+        elif unit in weapons_materials: # tracking a weapon
+            material = list(weapons_materials[unit].intersection(weapon_ascension))[0]
+        else:
+            continue
+
+        if day_name in materials[material][0]:
+            location = materials[material][1]
+            if location not in locations:
+                locations[location] = ["location", []]
+                locations[location][0] = material
+            locations[location][1].append(unit)
+    
+    possibilities = []
+    for location, v in locations.items():
+        material, units = v
+        possibilities.append(f"{material.capitalize()} mats for {natural_format(units)} at {location}")
+    
+    return possibilities
 
 def save():
     with open(USERDATA_LOCATION, 'wb') as f:
