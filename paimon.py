@@ -68,7 +68,7 @@ async def add(message, *args):
                     userdata[username].add(arg)
                     added.append(arg.capitalize())
                 else:
-                    await message.channel.send(f"You've already added {[natural_format(arg)]} to your list of characters and weapons!")
+                    await message.channel.send(f"You've already added {natural_format([arg])} to your list of characters and weapons!")
         if added:
             save()
             await message.channel.send(f"You've added {natural_format(added)} to your list of characters and weapons!")
