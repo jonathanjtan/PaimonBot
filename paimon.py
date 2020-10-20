@@ -77,7 +77,7 @@ async def add(message, *args):
             save()
             await message.channel.send(f"You've added {natural_format(added)} to your list of characters and weapons!")
     else:
-        await message.channel.send(f"Please provide space delimited arguments! Leave out punctuation from weapons and replace spaces with hyphens for multi-word weapons.")
+        await message.channel.send(f"Please provide comma delimited arguments! Leave out punctuation from weapons.")
 
 async def remove(message, *args):
     username = str(message.author)
@@ -97,7 +97,7 @@ async def remove(message, *args):
             save()
             await post(message, f"You've removed {natural_format(removed)} from your list of characters and weapons!")
     else:
-        await post(message, f"Please provide space delimited arguments!")
+        await message.channel.send(f"Please provide comma delimited arguments! Leave out punctuation from weapons.")
 
 async def today(message, *args):
     print(datetime.datetime.now())
