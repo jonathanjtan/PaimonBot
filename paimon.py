@@ -38,7 +38,11 @@ async def on_message(message):
             if len(tokens) == 1:
                 await valid_commands[tokens[0]](message)
             else:
-                await valid_commands[tokens[0]](message, *tokens[1:])
+                if tokens[0] == "add" or tokens[0] == "remove": # switch to comma delmited arguments after initial token
+                    comma_tokens = " ".join(tokens[1:]).split(",")
+                    await valid_commands[tokens[0]](message, *comma_tokens)
+                else:
+                    await valid_commands[tokens[0]](message, *tokens[1:])
 
 async def help(message, *args):
     await message.channel.send(f"valid commands: {', '.join(valid_commands.keys())}")
@@ -60,7 +64,7 @@ async def add(message, *args):
     added = []
     if args:
         for arg in args:
-            arg = str.lower(arg)
+            arg = str.lower(arg).strip()
             if arg not in characters_element and arg not in weapons_materials:
                 await message.channel.send(f"{arg.capitalize()} is neither a character nor weapon in Genshin Impact, please try again!")
             else:
@@ -80,7 +84,7 @@ async def remove(message, *args):
     removed = []
     if args:
         for arg in args:
-            arg = str.lower(arg)
+            arg = str.lower(arg).strip()
             if arg not in characters_element and arg not in weapons_materials:
                 await post(message, f"{arg.capitalize()} is neither a character nor weapon in Genshin Impact, please try again!")
             else:
@@ -198,6 +202,14 @@ def possibilities_format(units, day_name):
     
     return possibilities
 
+def migrate():
+    for user, units in userdata.items():
+        for unit in list(units):
+            space = unit.replace("-", " ")
+            units.remove(unit)
+            units.add(space)
+    save()
+
 def save():
     with open(USERDATA_LOCATION, 'wb') as f:
         print(f"saving: {userdata}")
@@ -206,6 +218,7 @@ def save():
 def load():
     with open(USERDATA_LOCATION, 'rb') as f:
         return pickle.load(f)
+    migrate()
 
 # get command list ready
 valid_commands = {
