@@ -52,8 +52,9 @@ async def test(message, *args):
     await post(message, "Test post please ignore")
 
 async def uwu(message, *args):
+    global uwu_owo
     uwu_owo = not uwu_owo
-    await post(message, "owo")
+    await post(message, "o")
 
 async def register(message, *args):
     username = str(message.author)
@@ -248,6 +249,7 @@ else:
     save()
 
 def main():
+    print(uwu_owo)
     client.run(TOKEN)
 
 if __name__ == "__main__":
