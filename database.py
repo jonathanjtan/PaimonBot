@@ -274,7 +274,7 @@ materials = {
     # books
     "ballad" : (["Wednesday", "Saturday", "Sunday"], "Forsaken Rift"),
     "diligence" : (["Tuesday", "Friday", "Sunday"], "Taishan Mansion"),
-    "freedom" : (["Monday", "Thursday", "Sunday"], "Taishan Mansion"),
+    "freedom" : (["Monday", "Thursday", "Sunday"], "Forsaken Rift"),
     "gold" : (["Wednesday", "Saturday", "Sunday"], "Taishan Mansion"),
     "prosperity" : (["Monday", "Thursday", "Sunday"], "Taishan Mansion"),
     "resistance" : (["Tuesday", "Friday", "Sunday"], "Forsaken Rift"),

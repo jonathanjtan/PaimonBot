@@ -182,7 +182,7 @@ def natural_format(words):
         return ", ".join(words[:len(words) - 1]) + ", and " + words[len(words) - 1]
 
 def possibilities_format(units, day_name):
-    locations = {}
+    possible = {}
     for unit in units:
         if unit in characters_element: # tracking a character
             material = list(characters_talent[unit].intersection(books))[0]
@@ -193,14 +193,14 @@ def possibilities_format(units, day_name):
 
         if day_name in materials[material][0]:
             location = materials[material][1]
-            if location not in locations:
-                locations[location] = ["location", []]
-                locations[location][0] = material
-            locations[location][1].append(unit)
+            if material not in possible:
+                possible[material] = ["location", []]
+                possible[material][0] = location
+            possible[material][1].append(unit)
     
     possibilities = []
-    for location, v in locations.items():
-        material, units = v
+    for material, v in locations.items():
+        location, units = v
         possibilities.append(f"{material.capitalize()} mats for {natural_format(units)} at {location}")
     
     return possibilities
