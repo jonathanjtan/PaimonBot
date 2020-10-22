@@ -200,7 +200,7 @@ def possibilities_format(units, day_name):
             possible[material][1].append(unit)
     
     possibilities = []
-    for material, v in locations.items():
+    for material, v in possible.items():
         location, units = v
         possibilities.append(f"{material.capitalize()} mats for {natural_format(units)} at {location}")
     
