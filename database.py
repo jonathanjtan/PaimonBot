@@ -189,7 +189,7 @@ claymore = {
     "debate club" : {elixir},
     "favonius greatsword" : {gladiator},
     "ferrous shadow" : {decarabian},
-    "prototype animus" : {aerosiderite},
+    "prototype aminus" : {aerosiderite},
     "rainslasher" : {elixir},
     "royal greatsword" : {gladiator},
     "sacrificial greatsword" : {wolf},

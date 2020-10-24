@@ -208,10 +208,9 @@ def possibilities_format(units, day_name):
 
 def migrate():
     for user, units in userdata.items():
-        for unit in list(units):
-            space = unit.replace("-", " ")
-            units.remove(unit)
-            units.add(space)
+        if "prototype animus" in units:
+            units.remove("prototype animus")
+            units.add("prototype aminus")
     save()
 
 def save():
