@@ -5,6 +5,7 @@ import pickle
 
 import discord
 from dotenv import load_dotenv
+from owotext import OwO
 
 from database import *
 
@@ -15,6 +16,7 @@ GUILD = os.getenv('DISCORD_SERVER')
 USERDATA_LOCATION = "users.pkl"
 userdata = None
 uwu_owo = False
+owo_uwu = False
 
 client = discord.Client()
 
@@ -55,6 +57,14 @@ async def uwu(message, *args):
     global uwu_owo
     uwu_owo = not uwu_owo
     await post(message, "o")
+
+async def owo(message, *args):
+    global owo_uwu
+    owo_uwu = not owo_uwu
+    if owo_uwu:
+        await post(message, "going sicko mode")
+    else:
+        await post(message, ":sadge:")
 
 async def register(message, *args):
     username = str(message.author)
@@ -203,7 +213,10 @@ async def character_lookup(message, character):
 
 # just so you're not writing awaits everywhere
 async def post(message, text):
-    if uwu_owo:
+    if owo_uwu:
+        uwu = OwO()
+        await message.channel.send(uwu.whatsthis(text))
+    elif uwu_owo:
         await message.channel.send(text.replace("u", "uwu").replace("o", "owo"))
     else:
         await message.channel.send(text)
@@ -268,6 +281,7 @@ valid_commands = {
     "day" : day,
     "help" : help,
     "lookup" : lookup,
+    "owo" : owo,
     "uwu" : uwu,
     "register" : register,
     "remove" : remove,
