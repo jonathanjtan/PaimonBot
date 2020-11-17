@@ -64,7 +64,7 @@ async def owo(message, *args):
     if owo_uwu:
         await post(message, "going sicko mode")
     else:
-        await post(message, ":sadge:")
+        await post(message, "<:Sadge:766857757533536266>")
 
 async def register(message, *args):
     username = str(message.author)
