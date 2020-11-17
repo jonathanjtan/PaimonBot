@@ -1,27 +1,29 @@
 # >database.py KEKW
 
 characters_element = {
-    "amber": "fire",
-    "barbara" : "water",
+    "amber": "pyro",
+    "barbara" : "hydro",
     "beidou" : "electro",
-    "bennett" : "fire",
-    "chongyun" : "ice",
-    "diluc" : "fire",
+    "bennett" : "pyro",
+    "chongyun" : "cryo",
+    "diluc" : "pyro",
+    "diona" : "cryo",
     "fischl" : "electro",
     "jean" : "ameno",
-    "kaeya" : "ice",
+    "kaeya" : "cryo",
     "keqing" : "electro",
     "lisa" : "electro",
-    "mona" : "water",
+    "mona" : "hydro",
     "ningguang" : "geo",
     "noelle" : "geo",
-    "qiqi" : "ice",
+    "qiqi" : "cryo",
     "razor" : "electro",
     "sucrose" : "ameno",
+    "tartaglia" : "hydro",
     "traveler" : "traveler", # Special case? Apparently we're getting characters with multiple elements soon
     "venti" : "ameno",
-    "xiangling" : "fire",
-    "xingqiu" : "water"
+    "xiangling" : "pyro",
+    "xingqiu" : "hydro"
 }
 
 # TODO: update when dendro drops
@@ -29,36 +31,11 @@ element_materials = {
     "ameno" : {"vayuda turquoise", "hurricane seed"},
     "dendro" : {"placeholder 1", "placeholder 2"},
     "electro" : {"vajrada amethyst", "lightning prism"},
-    "fire" : {"agnidus agate", "everflame seed"},
+    "pyro" : {"agnidus agate", "everflame seed"},
     "geo" : {"prithiva topaz", "basalt pillar"},
-    "ice": {"shivada jade", "hoarfrost core"},
-    "water" : {"varunada lazurite", "cleansing heart"},
+    "cryo": {"shivada jade", "hoarfrost core"},
+    "hydro" : {"varunada lazurite", "cleansing heart"},
     "traveler" : {"brilliant diamond"}
-}
-
-# characters to their level ascension materials
-characters_level_farmable = {
-    "amber": {"small lamp grass", "arrowhead"},
-    "barbara" : {"philanemo mushroom", "scroll"},
-    "beidou" : {"noctilucous jade", "hoarder"},
-    "bennett" : {"windwheel aster", "hoarder"},
-    "chongyun" : {"cor lapis", "mask"},
-    "diluc" : {"small lamp grass", "fatui"},
-    "fischl" : {"small lamp grass", "arrowhead"},
-    "jean" : {"dandelion seed", "mask"},
-    "kaeya" : {"calla lily", "hoarder"},
-    "keqing" : {"cor lapis", "nectar"},
-    "lisa" : {"valberry", "slime"},
-    "mona" : {"philanemo msuhroom", "nectar"},
-    "ningguang" : {"glaze lily", "fatui"},
-    "noelle" : {"valberry", "mask"},
-    "qiqi" : {"violetgrass", "scroll"},
-    "razor" : {"wolfhook", "mask"},
-    "sucrose" : {"windwheel aster", "nectar"},
-    "traveler" : {"windwheel aster", "mask"},
-    "venti" : {"cecilia", "slime"},
-    "xiangling" : {"jueyun chili", "slime"},
-    "xingqiu" : {"silk flower", "mask"}
 }
 
 # characters to their level ascension materials
@@ -69,6 +46,7 @@ characters_level = {
     "bennett" : {"windwheel aster", "hoarder"},
     "chongyun" : {"cor lapis", "mask"},
     "diluc" : {"small lamp grass", "fatui"},
+    "diona" : {"calla lily", "arrowhead"},
     "fischl" : {"small lamp grass", "arrowhead"},
     "jean" : {"dandelion seed", "mask"},
     "kaeya" : {"calla lily", "hoarder"},
@@ -80,6 +58,7 @@ characters_level = {
     "qiqi" : {"violetgrass", "scroll"},
     "razor" : {"wolfhook", "mask"},
     "sucrose" : {"windwheel aster", "nectar"},
+    "tartaglia" : {"starconch", "fatui"},
     "traveler" : {"windwheel aster", "mask"},
     "venti" : {"cecilia", "slime"},
     "xiangling" : {"jueyun chili", "slime"},
@@ -117,6 +96,7 @@ characters_talent = {
     "bennett" : {"resistance"},
     "chongyun" : {"diligence"},
     "diluc" : {"resistance"},
+    "diona" : {"freedom"},
     "fischl" : {"ballad"},
     "jean" : {"resistance"},
     "kaeya" : {"ballad"},
@@ -128,6 +108,7 @@ characters_talent = {
     "qiqi" : {"prosperity"},
     "razor" : {"resistance"},
     "sucrose" : {"freedom"},
+    "tartaglia" : {"freedom"},
     "traveler" : {"freedom"},
     "venti" : {"ballad"},
     "xiangling" : {"diligence"},

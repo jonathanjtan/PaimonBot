@@ -151,7 +151,7 @@ async def lookup(message, *args):
 
 async def character_lookup(message, character):
     element = characters_element[character]
-    farmable_mats = natural_format(list(characters_level_farmable[character]))
+    farmable_mats = natural_format(list(characters_level[character]))
     element_mats = natural_format(list(element_materials[element]))
     talent_mats = natural_format(list(characters_talent[character]))
     character = character.capitalize()
