@@ -138,7 +138,46 @@ async def box(message, *args):
     units = userdata[str(message.author)]
     characters = [c for c in units if c in characters_element]
     weapons = [w for w in units if w in weapons_materials]
-    await post(message, f"Your tracked characters are: {natural_format(characters)}. Your tracked weapons are: {natural_format(weapons)}")
+    await post(message, f"Your tracked characters are: {natural_format(characters)}.\n Your tracked weapons are: {natural_format(weapons)}")
+
+async def resin(message, *args):
+    if args:
+        current_resin_string = args[0]
+        try:
+            print(current_resin_string)
+            current_resin = int(current_resin_string)
+            time_to_full = (160 - current_resin) * datetime.timedelta(minutes=8)
+            time_full = datetime.datetime.now() + time_to_full
+            pst = (time_full - datetime.timedelta(hours=8)).strftime("%X")
+            est = (time_full - datetime.timedelta(hours=5)).strftime("%X")
+
+            time_to_twenty = 20 - current_resin % 20
+            next_twenty = current_resin + time_to_twenty
+            time_twenty = datetime.datetime.now() + (datetime.timedelta(minutes=8) * time_to_twenty)
+            pst_twenty = (time_twenty - datetime.timedelta(hours=8)).strftime("%X")
+            est_twenty = (time_twenty - datetime.timedelta(hours=5)).strftime("%X")
+
+            time_to_fourty = time_to_twenty + 20
+            next_fourty = next_twenty + 20
+            time_fourty = time_twenty + (datetime.timedelta(minutes=8) * 20)
+            pst_fourty = (time_fourty - datetime.timedelta(hours=8)).strftime("%X")
+            est_fourty = (time_fourty - datetime.timedelta(hours=5)).strftime("%X")
+
+            if current_resin > 160 or current_resin < 0:
+                await post(message, f"That's not possible bruh")
+            elif current_resin >= 140:
+                await post(message, f"Your resin will be full at roughly {pst} PST / {est} EST")
+            elif current_resin >= 120:
+                await post(message, f"Your resin will be full at roughly {pst} PST / {est} EST\nYou'll have {next_twenty} resin in roughly {time_to_twenty * 8} minutes around {pst_twenty} PST / {est_twenty} EST")
+            elif current_resin >= 0:
+                await post(message, f"""Your resin will be full at roughly {pst} PST / {est} EST\nYou'll have {next_twenty} resin in roughly {time_to_twenty * 8} minutes at {pst_twenty} PST / {est_twenty} EST\nYou'll have {next_fourty} resin in roughly {time_to_fourty * 8} minutes around {pst_fourty} PST / {est_fourty} EST""")
+
+
+        except:
+            await post(message, f"Provide your current amount of resin as an integer!") 
+
+    else:
+        await post(message, f"Provide your current amount of resin!")
 
 # TODO: impl
 async def lookup(message, *args):
@@ -232,6 +271,7 @@ valid_commands = {
     "uwu" : uwu,
     "register" : register,
     "remove" : remove,
+    "resin" : resin,
     "test" : test,
     "today" : today,
     "tomorrow" : tomorrow
@@ -241,7 +281,7 @@ valid_commands = {
 if os.path.exists(USERDATA_LOCATION):
     userdata = load()
     print(f"loading: {userdata}")
-    migrate()
+    #migrate()
 
 else:
     userdata = dict()
