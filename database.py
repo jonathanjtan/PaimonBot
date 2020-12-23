@@ -1,6 +1,7 @@
 # >database.py KEKW
 
 characters_element = {
+    "albedo": "geo",
     "amber": "pyro",
     "barbara" : "hydro",
     "beidou" : "electro",
@@ -12,6 +13,7 @@ characters_element = {
     "jean" : "ameno",
     "kaeya" : "cryo",
     "keqing" : "electro",
+    "klee" : "pyro",
     "lisa" : "electro",
     "mona" : "hydro",
     "ningguang" : "geo",
@@ -23,7 +25,9 @@ characters_element = {
     "traveler" : "traveler", # Special case? Apparently we're getting characters with multiple elements soon
     "venti" : "ameno",
     "xiangling" : "pyro",
-    "xingqiu" : "hydro"
+    "xinyan" : "pyro",
+    "xingqiu" : "hydro",
+    "zhongli" : "geo"
 }
 
 # TODO: update when dendro drops
@@ -40,6 +44,7 @@ element_materials = {
 
 # characters to their level ascension materials
 characters_level = {
+    "albedo": {"cecilia", "scroll"},
     "amber": {"small lamp grass", "arrowhead"},
     "barbara" : {"philanemo mushroom", "scroll"},
     "beidou" : {"noctilucous jade", "hoarder"},
@@ -51,8 +56,9 @@ characters_level = {
     "jean" : {"dandelion seed", "mask"},
     "kaeya" : {"calla lily", "hoarder"},
     "keqing" : {"cor lapis", "nectar"},
+    "klee" : {"philanemo mushroom", "scroll"},
     "lisa" : {"valberry", "slime"},
-    "mona" : {"philanemo msuhroom", "nectar"},
+    "mona" : {"philanemo mushroom", "nectar"},
     "ningguang" : {"glaze lily", "fatui"},
     "noelle" : {"valberry", "mask"},
     "qiqi" : {"violetgrass", "scroll"},
@@ -62,7 +68,9 @@ characters_level = {
     "traveler" : {"windwheel aster", "mask"},
     "venti" : {"cecilia", "slime"},
     "xiangling" : {"jueyun chili", "slime"},
-    "xingqiu" : {"silk flower", "mask"}
+    "xingqiu" : {"silk flower", "mask"},
+    "xinyan" : {"violetgrass", "hoarder"},
+    "zhongli" : {"cor lapis", "slime"}
 }
 # add the boss drops to character level up material
 for character, level in characters_level.items():
@@ -90,6 +98,7 @@ books = {"ballad", "diligence", "freedom", "gold", "prosperity", "resistance"}
 
 # characters to their talent ascension materials
 characters_talent = {
+    "albedo": {"ballad"},
     "amber": {"freedom"},
     "barbara" : {"freedom"},
     "beidou" : {"gold"},
@@ -101,6 +110,7 @@ characters_talent = {
     "jean" : {"resistance"},
     "kaeya" : {"ballad"},
     "keqing" : {"prosperity"},
+    "klee" : {"freedom"},
     "lisa" : {"ballad"},
     "mona" : {"resistance"},
     "ningguang" : {"prosperity"},
@@ -112,7 +122,9 @@ characters_talent = {
     "traveler" : {"freedom"},
     "venti" : {"ballad"},
     "xiangling" : {"diligence"},
-    "xingqiu" : {"gold"}
+    "xingqiu" : {"gold"},
+    "xinyan" : {"gold"},
+    "zhongli" : {"gold"}
 }
 # add the commons to talent level up material
 for character, talent in characters_talent.items():
