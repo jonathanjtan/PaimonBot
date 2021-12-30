@@ -1,9 +1,11 @@
 # paimon.py
 import datetime
+import discord
+import json
 import os
 import pickle
+import requests
 
-import discord
 from dotenv import load_dotenv
 from owotext import OwO
 
@@ -13,6 +15,8 @@ from database import *
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_SERVER')
+
+# flags and stuff
 USERDATA_LOCATION = "users.pkl"
 userdata = None
 uwu_owo = False
@@ -211,6 +215,81 @@ async def character_lookup(message, character):
     )
     await post(message, text)
 
+'''
+small use warframe section
+input should be like: !relic lith foo1 bar2 baz3
+for each relic, query warframe.market for items last three plat prices
+then output sorted by plat value
+https://warframe.market/api_docs
+https://github.com/TitaniaProject/warframe-relic-data/blob/master/data/Relics.json
+'''
+async def relic(message, *args):
+    endpoint = "https://api.warframe.market/v1"
+    strips = ['neuroptics', 'systems', 'chassis']
+
+    if args:
+        if len(args) < 3 or len(args) % 2 == 0:
+            await post(message, f"Expected format: `n <era> <type> <era> <type>...`, e.g. `=relic 3 lith a1`")
+        else:
+            reward_pool = {} # map from rewards to plat values
+
+            # tokenize into groupings
+            relic_groups = []
+            for i in range(1, len(args), 2):
+                relic_groups.append((args[i], args[i + 1]))
+
+            # populate item pool with all possible rewards
+            for relic_name, relic_type in relic_groups:
+                print(f"Processing {relic_name} {relic_type}")
+
+                # hit the local JSON relic mappings
+                lookup_string = f"{relic_name.lower().capitalize()} {relic_type.capitalize()}"
+                if lookup_string not in relics:
+                    continue
+                else:
+                    for reward in relics[lookup_string]['rewards']:
+                        reward_name = reward['item'].lower().replace(' ', '_')
+                        for s in strips:
+                            if s in reward_name:
+                                reward_name = reward_name.replace('_blueprint', '')
+                                break
+                        if reward_name not in reward_pool:
+                            reward_pool[reward_name] = []
+
+            # remove forma, can't trade it
+            if 'forma_blueprint' in reward_pool:
+                del reward_pool['forma_blueprint']
+
+            # hit warframe market for each item in the pool
+            for item in reward_pool.keys():
+                r = requests.get(f"https://api.warframe.market/v1/items/{item}/orders").json()
+
+                # filter by online/ingame
+                curr_orders = []
+                if 'payload' in r and 'orders' in r['payload']:
+                    for order in r['payload']['orders']:
+                        status = order['user']['status']
+                        if status == 'ingame' or status == 'online':
+                            curr_orders.append(order['platinum'])
+                else:
+                    continue
+
+                # grab cheapest n orders
+                reward_pool[item] = sorted(curr_orders)[:min(int(args[0]), len(curr_orders))]
+           
+            print(f"Processed reward pool: {reward_pool}")
+            
+            output = [f'Stack ranked cheapest {args[0]} sell orders from requested relic(s)']
+            output.append('```')
+            for reward in sorted(reward_pool.keys(), key=lambda x: sum(reward_pool[x])/len(reward_pool[x]), reverse=True):
+                output.append(f"{reward}: {reward_pool[reward]}, avg = {sum(reward_pool[reward])/len(reward_pool[reward]):.2f}")
+            output.append('```')
+
+            await post(message, '\n'.join(output))
+    else:
+        await post(message, f"Expected format: `lith a1 lith b2...`")
+
+
 # just so you're not writing awaits everywhere
 async def post(message, text):
     if owo_uwu:
@@ -267,7 +346,7 @@ def migrate():
 
 def save():
     with open(USERDATA_LOCATION, 'wb') as f:
-        print(f"saving: {userdata}")
+        print(f"saving: {userdata}\n")
         pickle.dump(userdata, f, pickle.HIGHEST_PROTOCOL)
 
 def load():
@@ -284,6 +363,7 @@ valid_commands = {
     "owo" : owo,
     "uwu" : uwu,
     "register" : register,
+    "relic" : relic,
     "remove" : remove,
     "resin" : resin,
     "test" : test,
@@ -291,18 +371,25 @@ valid_commands = {
     "tomorrow" : tomorrow
 }
 
+# load warframe relics
+relics = {}
+with open('relics.json') as json_file:
+    data = json.load(json_file)
+ 
+    for entry in data:
+        relics[entry['name']] = entry
+
+print(relics['Axi A1']['rewards'])
+
 # populate "userdata", indexed on author id
 if os.path.exists(USERDATA_LOCATION):
     userdata = load()
-    print(f"loading: {userdata}")
-    #migrate()
-
+    print(f"Loading registered data... \n {userdata} \n")
 else:
     userdata = dict()
     save()
 
 def main():
-    print(uwu_owo)
     client.run(TOKEN)
 
 if __name__ == "__main__":
