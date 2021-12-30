@@ -249,10 +249,8 @@ async def relic(message, *args):
                 else:
                     for reward in relics[lookup_string]['rewards']:
                         reward_name = reward['item'].lower().replace(' ', '_')
-                        for s in strips:
-                            if s in reward_name:
-                                reward_name = reward_name.replace('_blueprint', '')
-                                break
+                        if any(x in reward_name for x in strips):
+                            reward_name = reward_name.replace('_blueprint', '')
                         if reward_name not in reward_pool:
                             reward_pool[reward_name] = []
 
@@ -261,21 +259,21 @@ async def relic(message, *args):
                 del reward_pool['forma_blueprint']
 
             # hit warframe market for each item in the pool
-            for item in reward_pool.keys():
-                r = requests.get(f"https://api.warframe.market/v1/items/{item}/orders").json()
+            for reward in reward_pool.keys():
+                r = requests.get(f"https://api.warframe.market/v1/items/{reward}/orders").json()
 
                 # filter by online/ingame
                 curr_orders = []
                 if 'payload' in r and 'orders' in r['payload']:
                     for order in r['payload']['orders']:
                         status = order['user']['status']
-                        if status == 'ingame' or status == 'online':
+                        if order['order_type'] == 'sell' and status == 'ingame' or status == 'online':
                             curr_orders.append(order['platinum'])
                 else:
                     continue
 
                 # grab cheapest n orders
-                reward_pool[item] = sorted(curr_orders)[:min(int(args[0]), len(curr_orders))]
+                reward_pool[reward] = sorted(curr_orders)[:min(int(args[0]), len(curr_orders))]
            
             print(f"Processed reward pool: {reward_pool}")
             
@@ -286,9 +284,45 @@ async def relic(message, *args):
             output.append('```')
 
             await post(message, '\n'.join(output))
+
+            # TODO: refactor so it doesn't look like shit
+            # calculate expected plat value from a relic (intact and radiant)
+            # intact: (.2533... * 3) + (.11 * 2) + (.02)
+            # radiant: (.1667... * 3) + (.2 * 2) + (.1)
+
+            relic_output = []
+            for relic_name, relic_type in relic_groups:
+                print(f"Processing {relic_name} {relic_type}")
+
+
+                intact_ev, radiant_ev = 0, 0
+                # hit the local JSON relic mappings
+                lookup_string = f"{relic_name.lower().capitalize()} {relic_type.capitalize()}"
+                if lookup_string not in relics:
+                    continue
+                else:
+                    for reward in relics[lookup_string]['rewards']:
+                        reward_name = reward['item'].lower().replace(' ', '_')
+                        if any(x in reward_name for x in strips):
+                            reward_name = reward_name.replace('_blueprint', '')
+                        if reward_name == "forma_blueprint":
+                            continue
+                        curr_avg = sum(reward_pool[reward_name]) / len(reward_pool[reward_name])
+                        if reward['chance'] == .02: # rare
+                            intact_ev += .02 * curr_avg
+                            radiant_ev += .1 * curr_avg
+                        elif reward['chance'] == .11: # uncommon 
+                            intact_ev += .11 * curr_avg
+                            radiant_ev += .2 * curr_avg
+                        elif reward['chance'] == .25: # common
+                            intact_ev += .2533 * curr_avg
+                            radiant_ev += .1667 * curr_avg
+
+                relic_output.append(f"{relic_name} {relic_type}: Intact Plat EV ({intact_ev:.2f}), Radiant Plat EV ({radiant_ev:.2f}) ")
+            await post(message, '\n'.join(relic_output))
+                        
     else:
         await post(message, f"Expected format: `lith a1 lith b2...`")
-
 
 # just so you're not writing awaits everywhere
 async def post(message, text):
@@ -378,8 +412,6 @@ with open('relics.json') as json_file:
  
     for entry in data:
         relics[entry['name']] = entry
-
-print(relics['Axi A1']['rewards'])
 
 # populate "userdata", indexed on author id
 if os.path.exists(USERDATA_LOCATION):
